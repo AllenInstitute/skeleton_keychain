@@ -68,7 +68,7 @@ on fMOST data and you want your histogram PCA features to capture variation from
 
 ## Example Usage
 Entry Point 1 example. This will generate layer-aligned and upright swc files for
-a list of mouse cortical specimens. It will then generate histogram, soma depth and various
+a list of mouse cortical specimens pulling all data from LIMS. It will then generate histogram, soma depth and various
 feature csv files in the output directory.
 
 ```
