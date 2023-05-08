@@ -12,7 +12,9 @@ Then:
 
 
 ## Entry Points
-After installation the `run_features`  console script will be available to run from the command line of your environment. This flexible script can be used to generate features, uprighted & layer-aligned swc files, histograms and soma depth csvs from a variety of input sources as detialed below.   
+After installation the `run_features`  console script will be available to run from the command line of your environment. 
+This flexible script can be used to generate features, uprighted & layer-aligned swc files, histograms and soma depth 
+csvs from a variety of input sources as detailed below.   
 
 A quick note on file nomenclature. It is expected that when passing in files from local sources (i.e. not getting swc/layers from lims) that they
 are named with the convention of specimenID.extension.  So if you are 
@@ -65,7 +67,9 @@ on fMOST data and you want your histogram PCA features to capture variation from
 
 
 ## Example Usage
-Entry Point 1 example
+Entry Point 1 example. This will generate layer-aligned and upright swc files for
+a list of mouse cortical specimens. It will then generate histogram, soma depth and various
+feature csv files in the output directory.
 
 ```
 run_features --input_specimen_id_txt path/to/cortical_mouse/specimens_ids.txt 

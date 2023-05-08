@@ -108,10 +108,10 @@ def main(input_specimen_id_txt,
 
 
 
-    core_files_to_delete = [f for f in os.listdir(".") if "core." in f and ".py" not in f]
-    for fi in core_files_to_delete:
-        print("Deleting: {}".format(fi))
-        os.remove(fi)
+    # core_files_to_delete = [f for f in os.listdir(".") if "core." in f and ".py" not in f]
+    # for fi in core_files_to_delete:
+    #     print("Deleting: {}".format(fi))
+    #     os.remove(fi)
 
     execution_dir = os.path.abspath(".")
     cd_command = "cd {}".format(execution_dir)

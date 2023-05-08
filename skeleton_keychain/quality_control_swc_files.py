@@ -53,10 +53,10 @@ def main(ur_swc,la_swc,qc_image_file,layer_depths_file, **kwargs):
     fig.savefig(qc_image_file, dpi=300, bbox_inches='tight')
     plt.clf()
 
-    core_files_to_delete = [f for f in os.listdir(".") if "core." in f and ".py" not in f]
-    for fi in core_files_to_delete:
-        print("Deleting: {}".format(fi))
-        os.remove(fi)
+    # core_files_to_delete = [f for f in os.listdir(".") if "core." in f and ".py" not in f]
+    # for fi in core_files_to_delete:
+    #     print("Deleting: {}".format(fi))
+    #     os.remove(fi)
 
 
 if __name__ == "__main__":
