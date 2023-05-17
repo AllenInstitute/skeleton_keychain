@@ -1,22 +1,29 @@
-from neuron_morphology.swc_io import *
+from neuron_morphology.swc_io import morphology_from_swc
 import matplotlib.pyplot as plt
 from morph_utils.visuals import basic_morph_plot
 import json
 import argschema as ags
 import os
+from skeleton_keys.io import load_default_layer_template
 
 class IO_Schema(ags.ArgSchema):
     ur_swc = ags.fields.InputFile(description='input txt with specimen id list')
     la_swc = ags.fields.InputFile(description='input txt with specimen id list')
     qc_image_file = ags.fields.OutputFile(description='input txt with specimen id list')
-    layer_depths_file = ags.fields.InputFile(description="layer depths file")
+    layer_depths_file = ags.fields.InputFile(description="layer depths file",allow_none=True,default=None)
 
 def main(ur_swc,la_swc,qc_image_file,layer_depths_file, **kwargs):
 
     filename = os.path.basename(ur_swc)
-    with open(layer_depths_file,"r") as f:
-        layer_depths = json.load(f)
-        layer_depths['1']=0
+
+    if layer_depths_file is None:
+        layer_depths = load_default_layer_template()
+        layer_depths['1'] = 0
+    else:
+
+        with open(layer_depths_file,"r") as f:
+            layer_depths = json.load(f)
+            layer_depths['1']=0
 
 
     ur_morph = morphology_from_swc(ur_swc)
@@ -60,5 +67,10 @@ def main(ur_swc,la_swc,qc_image_file,layer_depths_file, **kwargs):
 
 
 if __name__ == "__main__":
+    module = ags.ArgSchemaParser(schema_type=IO_Schema)
+    main(**module.args)
+
+
+def console_script():
     module = ags.ArgSchemaParser(schema_type=IO_Schema)
     main(**module.args)

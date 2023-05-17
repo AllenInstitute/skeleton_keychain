@@ -44,11 +44,12 @@ def submit_job_return_id(job_file, parent_job_id, start_condition):
                 f"If parent_job_id ({parent_job_id}) or start_conditon ({start_condition}) is defined, both must be "
                 f"defined (not None)")
 
+    # a single job can depend on multiple jobs
     if parent_job_id:
         if hasattr(parent_job_id, "__iter__"):
             command = "sbatch --dependency={}".format(start_condition)
             for p_jid in parent_job_id:
-                command = command + ":{}"
+                command = command + f":{p_jid}"
             command = command + " {}".format(job_file)
         else:
             command = "sbatch --dependency={}:{} {}".format(start_condition, parent_job_id, job_file)
