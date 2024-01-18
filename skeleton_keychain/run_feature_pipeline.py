@@ -123,8 +123,11 @@ def main(input_specimen_id_txt,
     layer_list = '"[' + "".join([f"'{lyr}', " for lyr in layer_list]) + ']"'
 
     specimen_ids = np.loadtxt(input_specimen_id_txt, dtype=str)
+    if specimen_ids.shape == ():
+        specimen_ids = [specimen_ids]
+
     # specimen_ids = pd.read_csv(input_specimen_id_txt)['specimen_id'].values
-    print("Number of Specimens to generate files for: {}".format(len(specimen_ids)))
+    print("Number of Specimens to analyze files for: {}".format(len(specimen_ids)))
     time.sleep(2)
 
     job_dir = os.path.join(output_dir, "JobFiles")
@@ -134,7 +137,13 @@ def main(input_specimen_id_txt,
     swc_file_gen_job_ids = []
     dag_id = 0
     if (aligned_swc_dir is None) and (upright_swc_dir is None) and (not orientation_independent_features):
-
+        
+        # if the species is human but the user has not given a layer depths json, we can not
+        # run layer alignment
+        if species == "human" and layer_depths_file is None:
+            msg = "You are trying to upright and layer-align human data but have not provided --layer_depths_file as an input"
+            raise ValueError(msg)
+        
         # We need to generate the files and expect to be able to do so through database queries
         upright_swc_dir = os.path.join(output_dir, "SWC_Upright")
         feature_swc_dir = upright_swc_dir
@@ -213,6 +222,9 @@ def main(input_specimen_id_txt,
                 "qc_image_file": qc_image_file,
                 "layer_depths_file": layer_depths_file
             }
+            if layer_depths_file is None:
+                del qc_image_command_kwargs["layer_depths_file"]
+
             qc_image_command_kwargs = " ".join(
                 ["--{} {}".format(k, v) for k, v in qc_image_command_kwargs.items() if v is not None])
 
@@ -263,11 +275,18 @@ def main(input_specimen_id_txt,
         if aligned_swc_dir is not None:
             assert os.path.exists(aligned_swc_dir)
             assert len([f for f in os.listdir(aligned_swc_dir) if f.endswith(".swc")]) != 0
-
+        else:
+            print(f"with orientation_independent_features={orientation_independent_features} "
+                  f"need to define aligned_swc_dir, you have set it to {aligned_swc_dir}. "
+                  )
         if upright_swc_dir is not None:
+            feature_swc_dir = upright_swc_dir
             assert os.path.exists(upright_swc_dir)
             assert len([f for f in os.listdir(upright_swc_dir) if f.endswith(".swc")]) != 0
-
+        else:
+            print(f"with orientation_independent_features={orientation_independent_features} "
+                  f"need to define upright_swc_dir, you have set it to {upright_swc_dir}. "
+                  )
     if calculate_features:
 
         histogram_ofile = None
@@ -285,6 +304,8 @@ def main(input_specimen_id_txt,
                                    "output_hist_file": histogram_ofile,
                                    "output_soma_file": soma_depth_ofile,
                                    "layer_depths_file": layer_depths_file}
+            if layer_depths_file is None:
+                del aux_file_input_args["layer_depths_file"]
             profile_cmd = "skelekeys-profiles-from-swcs " + " ".join(
                 ["--{} {}".format(k, v) for k, v in aux_file_input_args.items()])
 
