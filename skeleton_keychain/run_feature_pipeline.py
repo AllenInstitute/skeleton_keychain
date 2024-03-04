@@ -72,6 +72,10 @@ class IO_Schema(ags.ArgSchema):
         allow_none=True,
         description="Output file to save apical dendrite depth profile loadings",
     )
+    align_morph_to_layer_drawings = ags.fields.Bool(
+        defualt = True,
+        description = "see skeleton_keys.layer_aligned_swc. essentialyl for pseq set True, everything else set False"
+    )
 
 
 def main(input_specimen_id_txt,
@@ -98,6 +102,7 @@ def main(input_specimen_id_txt,
          save_axon_depth_profile_loadings_file,
          save_basal_dendrite_depth_profile_loadings_file,
          save_apical_dendrite_depth_profile_loadings_file,
+         align_morph_to_layer_drawings,
          **kwargs):
 
     # validation
@@ -211,6 +216,7 @@ def main(input_specimen_id_txt,
                 "correct_for_shrinkage": shrinkage_correction,
                 "correct_for_slice_angle": slice_angle_tilt_correction,
                 "layer_list": layer_list,
+                "align_morph_to_layer_drawings":align_morph_to_layer_drawings
             }
             layer_align_command_kwargs = {k: v for k, v in layer_align_command_kwargs.items() if v is not None}
             layer_align_command_kwargs = " ".join(
