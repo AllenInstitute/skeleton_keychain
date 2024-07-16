@@ -120,12 +120,14 @@ def main(input_specimen_id_txt,
 
     execution_dir = os.path.abspath(".")
     cd_command = "cd {}".format(execution_dir)
-
+    layer_list = "None"
     if species == "mouse":
         layer_list = ["Layer1", "Layer2/3", "Layer4", "Layer5", "Layer6a", "Layer6b"]
     elif species == "human":
         layer_list = ["Layer1", "Layer2", "Layer3", "Layer4", "Layer5", "Layer6"]
-    layer_list = '"[' + "".join([f"'{lyr}', " for lyr in layer_list]) + ']"'
+    
+    if layer_list != "None":
+        layer_list = '"[' + "".join([f"'{lyr}', " for lyr in layer_list]) + ']"'
 
     specimen_ids = np.loadtxt(input_specimen_id_txt, dtype=str)
     if specimen_ids.shape == ():
