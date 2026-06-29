@@ -14,6 +14,8 @@ class IO_Schema(ags.ArgSchema):
     orientation_independent_features = ags.fields.Bool(allow_none=True,
                                                        description=" set to True when you want to run features without generating a soma depth or histogram file (e.g. subcotical)")
     shrinkage_correction = ags.fields.Boolean(description="If true, correct for shrinkage")
+    shrinkage_adjustment_tag = ags.fields.String(default=None, allow_none=True,
+                                                 description='Dataset tag for overwriting large shrinkage vals with mean')
     slice_angle_tilt_correction = ags.fields.Boolean(description="If true, correct for slice angle tilt")
 
     species = ags.fields.Str(description="mouse or human", allow_none=True, default=None)
@@ -90,6 +92,7 @@ def main(input_specimen_id_txt,
          raw_orientation_swc_dir,
          polygon_json_dir,
          shrinkage_correction,
+         shrinkage_adjustment_tag,
          slice_angle_tilt_correction,
          analyze_apical_dendrite,
          analyze_basal_dendrite,
@@ -202,6 +205,7 @@ def main(input_specimen_id_txt,
                 "swc_path": raw_swc_file,
                 "surface_and_layers_file": polygon_json,
                 "correct_for_shrinkage": shrinkage_correction,
+                "shrinkage_adjustment_tag": shrinkage_adjustment_tag,
                 "correct_for_slice_angle": slice_angle_tilt_correction,
             }
             upright_command_kwargs = {k: v for k, v in upright_command_kwargs.items() if v is not None}
@@ -216,6 +220,7 @@ def main(input_specimen_id_txt,
                 "swc_path": raw_swc_file,
                 "surface_and_layers_file": polygon_json,
                 "correct_for_shrinkage": shrinkage_correction,
+                "shrinkage_adjustment_tag": shrinkage_adjustment_tag,
                 "correct_for_slice_angle": slice_angle_tilt_correction,
                 "layer_list": layer_list,
                 "align_morph_to_layer_drawings":align_morph_to_layer_drawings
